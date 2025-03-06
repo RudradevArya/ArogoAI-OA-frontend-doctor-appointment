@@ -10,7 +10,7 @@ const AppointmentBooking = ({ doctorId }) => {
 
   const handleBooking = async () => {
     try {
-      const response = await axios.post('/api/appointments/book', {
+      await axios.post('/api/appointments/book', {
         ...appointmentData,
         doctorId
       }, {
@@ -20,6 +20,7 @@ const AppointmentBooking = ({ doctorId }) => {
       // Redirect or update UI
     } catch (error) {
       console.error('Booking error:', error);
+      alert('Failed to book appointment. Please try again.');
     }
   };
 

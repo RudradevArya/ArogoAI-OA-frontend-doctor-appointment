@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Auth from './pages/Auth';
 import DoctorSearch from './pages/DoctorSearch';
 import AppointmentBooking from './pages/AppointmentBooking';
@@ -9,14 +9,14 @@ function App() {
   return (
     <Router>
       <div>
-        <Switch>
-          <Route path="/login" component={Auth} />
-          <Route path="/register" component={Auth} />
-          <Route path="/search" component={DoctorSearch} />
-          <Route path="/book/:doctorId" component={AppointmentBooking} />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/" exact component={DoctorSearch} />
-        </Switch>
+        <Routes>
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
+          <Route path="/search" element={<DoctorSearch />} />
+          <Route path="/book/:doctorId" element={<AppointmentBooking />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<DoctorSearch />} />
+        </Routes>
       </div>
     </Router>
   );
