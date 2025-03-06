@@ -1,45 +1,50 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { TextField, Button, Typography, Card, CardContent } from '@mui/material';
+import api from '../services/api';
 
 const DoctorSearch = () => {
-  const [searchParams, setSearchParams] = useState({ specialty: '', location: '' });
+  const [specialty, setSpecialty] = useState('');
+  const [location, setLocation] = useState('');
   const [doctors, setDoctors] = useState([]);
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get('/api/doctors/search', { params: searchParams });
+      const response = await api.get(`/doctors/search?specialty=${specialty}&location=${location}`);
       setDoctors(response.data);
     } catch (error) {
-      console.error('Search error:', error);
+      console.error('Search failed:', error);
     }
   };
 
   return (
     <div>
-      <h2>Find a Doctor</h2>
-      <input
-        type="text"
-        placeholder="Specialty"
-        value={searchParams.specialty}
-        onChange={(e) => setSearchParams({...searchParams, specialty: e.target.value})}
+      <Typography variant="h5" gutterBottom>Search Doctors</Typography>
+      <TextField
+        label="Specialty"
+        fullWidth
+        margin="normal"
+        value={specialty}
+        onChange={(e) => setSpecialty(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Location"
-        value={searchParams.location}
-        onChange={(e) => setSearchParams({...searchParams, location: e.target.value})}
+      <TextField
+        label="Location"
+        fullWidth
+        margin="normal"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
       />
-      <button onClick={handleSearch}>Search</button>
-      <div>
-        {doctors.map(doctor => (
-          <div key={doctor._id}>
-            <h3>{doctor.name}</h3>
-            <p>Specialty: {doctor.specialty}</p>
-            <p>Location: {doctor.location}</p>
-            {/* Add a link to doctor's profile/booking page */}
-          </div>
-        ))}
-      </div>
+      <Button onClick={handleSearch} variant="contained" color="primary">
+        Search
+      </Button>
+      {doctors.map((doctor) => (
+        <Card key={doctor._id} sx={{ mt: 2 }}>
+          <CardContent>
+            <Typography variant="h6">{doctor.user.name}</Typography>
+            <Typography>Specialty: {doctor.specialty}</Typography>
+            <Typography>Location: {doctor.location}</Typography>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };

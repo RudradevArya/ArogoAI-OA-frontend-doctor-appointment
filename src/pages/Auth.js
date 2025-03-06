@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,22 +10,32 @@ const Auth = () => {
     password: '',
     role: 'patient'
   });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const response = await axios.post(endpoint, formData);
+      const endpoint = isLogin ? '/auth/login' : '/auth/register';
+      console.log('Sending request to:', endpoint);
+      console.log('Request data:', formData);
+      const response = await api.post(endpoint, formData);
+      console.log('Auth response:', response.data);
       localStorage.setItem('token', response.data.token);
-      // Redirect to dashboard
+      setMessage(isLogin ? 'Login successful!' : 'Registration successful!');
+      setTimeout(() => navigate('/dashboard'), 2000);
     } catch (error) {
-      console.error('Authentication error:', error);
+      console.error('Full error:', error);
+      console.error('Error response:', error.response);
+      setMessage(error.response?.data?.message || 'An error occurred');
     }
   };
-
+  
   return (
     <div>
       <h2>{isLogin ? 'Login' : 'Register'}</h2>
+      {message && <p>{message}</p>}
       <form onSubmit={handleSubmit}>
         {!isLogin && (
           <input
